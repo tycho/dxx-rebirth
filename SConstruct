@@ -3777,6 +3777,7 @@ class DXXCommon(LazyObjectConstructor):
 			{
 				'variable': generic_variable,
 				'arguments': (
+					('lto', False, 'enable gcc link time optimization'),
 					('rpi_vc_path', self.RPI_DEFAULT_VC_PATH, 'directory for RPi VideoCore libraries'),
 					('opengles_lib', self.selected_OGLES_LIB, 'name of the OpenGL ES library to link against'),
 					('egl_lib', self.selected_EGL_LIB, 'name of the OpenGL ES Graphics Library to link against'),
@@ -3787,7 +3788,6 @@ class DXXCommon(LazyObjectConstructor):
 			{
 				'variable': self.UIntVariable,
 				'arguments': (
-					('lto', 0, 'enable gcc link time optimization'),
 					('pch', None, 'pre-compile own headers used at least this many times'),
 					('syspch', None, 'pre-compile system headers used at least this many times'),
 					('max_joysticks', 8, 'maximum number of usable joysticks'),
@@ -4434,9 +4434,16 @@ class DXXCommon(LazyObjectConstructor):
 				add_flags[flags] = CLVar(value)
 		env.Append(**add_flags)
 		if self.user_settings.lto:
+			if self.user_settings.lto == 'thin':
+				ltoval = 'thin'
+			else:
+				try:
+					ltoval = int(ltoval)
+				except:
+					ltoval = None
 			env.Append(CXXFLAGS = [
 				# clang does not support =N syntax
-				('-flto=%s' % self.user_settings.lto) if self.user_settings.lto > 1 else '-flto',
+				('-flto=%s' % ltoval) if ltoval else '-flto',
 			])
 
 	@cached_property
