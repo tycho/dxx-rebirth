@@ -715,6 +715,12 @@ int gr_set_mode(screen_mode mode)
 		mode.height = 480;
 		Game_screen_mode = mode;
 	}
+#else
+	static bool set_mode_once = false;
+	if (set_mode_once)
+		return 0;
+	else
+		set_mode_once = true;
 #endif
 	const uint_fast32_t w = SM_W(mode), h = SM_H(mode);
 
