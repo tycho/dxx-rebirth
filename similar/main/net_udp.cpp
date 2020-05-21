@@ -6026,7 +6026,10 @@ static int sender_is_tracker(const _sockaddr &sender, const _sockaddr &tracker)
 	{
 		if (tf == AF_INET)
 		{
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wold-style-cast"
 			if (IN6_IS_ADDR_V4MAPPED(&sender.sin6.sin6_addr))
+#pragma GCC diagnostic pop
 			{
 				if (memcmp(&sender.sin6.sin6_addr.s6_addr[12], &tracker.sin.sin_addr, sizeof(tracker.sin.sin_addr)))
 					return 0;
