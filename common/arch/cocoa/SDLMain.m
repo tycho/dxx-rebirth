@@ -36,6 +36,20 @@ extern OSErr	CPSSetFrontProcess( CPSProcessSerNum *psn);
 
 #endif /* SDL_USE_CPS */
 
+typedef int CGSConnection;
+typedef enum {
+    CGSGlobalHotKeyEnable = 0,
+    CGSGlobalHotKeyDisable = 1,
+} CGSGlobalHotKeyOperatingMode;
+
+extern CGSConnection _CGSDefaultConnection(void);
+
+extern CGError CGSGetGlobalHotKeyOperatingMode(
+                                               CGSConnection connection, CGSGlobalHotKeyOperatingMode *mode);
+
+extern CGError CGSSetGlobalHotKeyOperatingMode(CGSConnection connection,
+                                               CGSGlobalHotKeyOperatingMode mode);
+
 static int    gArgc;
 static char  **gArgv;
 static BOOL   gFinderLaunch;
@@ -199,6 +213,7 @@ static void CustomApplicationMain (int argc, char **argv)
 {
     NSAutoreleasePool	*pool = [[NSAutoreleasePool alloc] init];
     SDLMain				*sdlMain;
+    CGSConnection        conn;
 
     /* Ensure the application object is initialised */
     [NSApplication sharedApplication];
@@ -213,6 +228,9 @@ static void CustomApplicationMain (int argc, char **argv)
                     [NSApplication sharedApplication];
     }
 #endif /* SDL_USE_CPS */
+
+    conn = _CGSDefaultConnection();
+    CGSSetGlobalHotKeyOperatingMode(conn, CGSGlobalHotKeyDisable);
 
     /* Set up the menubar */
     [NSApp setMainMenu:[[NSMenu alloc] init]];
