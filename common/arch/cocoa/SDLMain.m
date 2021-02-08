@@ -232,6 +232,10 @@ static void CustomApplicationMain (int argc, char **argv)
     conn = _CGSDefaultConnection();
     CGSSetGlobalHotKeyOperatingMode(conn, CGSGlobalHotKeyDisable);
 
+    /* Disable accent menu */
+    [[NSUserDefaults standardUserDefaults] setObject:@"NO"
+                                              forKey:@"ApplePressAndHoldEnabled"];
+
     /* Set up the menubar */
     [NSApp setMainMenu:[[NSMenu alloc] init]];
     setApplicationMenu();
